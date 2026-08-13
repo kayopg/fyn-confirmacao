@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="dark">
+<title>Fyn — confirmação de cadastro</title>
+
+<!--
+  PÁGINA DE POUSO DA CONFIRMAÇÃO DE E-MAIL
+
+  Para onde o link do e-mail de cadastro joga a pessoa depois que o Supabase
+  valida o token. Configurada em Authentication → URL Configuration → Site URL.
+
+  ── Por que não é um texto fixo ─────────────────────────────────────────
+
+  O mesmo endereço recebe desfechos diferentes, e o que os separa nem sempre
+  chega ao servidor: parte vem no fragmento da URL (depois do #), que o
+  navegador nunca envia. Só dá para distinguir aqui, no cliente.
+
+    1. ?code=…                       → confirmou (fluxo PKCE)
+    2. #access_token=…&type=signup   → confirmou (fluxo implícito)
+    3. #error=… ou ?error=…          → link expirado ou já usado
+    4. nada disso                    → não dá para afirmar nada
+
+  Os dois primeiros são tratados juntos porque o `flowType` do cliente pode
+  mudar sem ninguém lembrar desta página. Uma página que dissesse "confirmado"
+  sempre mentiria no caso 3 — justamente quando existe uma ação a tomar.
+
+  ── Sobre o code e os tokens no endereço ────────────────────────────────
+
+  Nada disso é usado aqui. A confirmação já aconteceu no servidor, antes deste
+  redirecionamento; quem faz login é o app, com e-mail e senha. Por isso os
+  valores são apagados do endereço logo na entrada, para não ficarem no
+  histórico do navegador nem em algum "compartilhar esta página".
+
+  ── Manutenção ──────────────────────────────────────────────────────────
+
+  Arquivo único de propósito: sem CSS externo, sem fonte remota, sem JS de
+  terceiros. Abre instantâneo em rede ruim de celular, que é onde ele será
+  aberto na prática.
+-->
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+
+  :root {
+    --fundo: #0C1410;
+    --superficie: #151F1A;
+    --borda: #27362D;
+    --texto: #E9F2EC;
+    --texto-2: #9CB0A4;
+    --texto-3: #6E8579;
+    --verde: #22C55E;
+    --ambar: #F59E0B;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--fundo);
+    color: var(--texto);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                 "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Respeita o recorte da tela em celular com notch. */
+    padding: max(24px, env(safe-area-inset-top))
+             max(24px, env(safe-area-inset-right))
+             max(24px, env(safe-area-inset-bottom))
+             max(24px, env(safe-area-inset-left));
+  }
+
+  .cartao {
+    width: 100%;
+    max-width: 400px;
+    background: var(--superficie);
+    border: 1px solid var(--borda);
+    border-radius: 18px;
+    padding: 36px 28px 30px;
+    text-align: center;
+  }
+
+  .marca {
+    width: 62px; height: 62px;
+    display: block;
+    margin: 0 auto 22px;
+    border-radius: 18px;
+  }
+
+  .selo {
+    width: 52px; height: 52px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    border: 2px solid currentColor;
+  }
+  .selo svg { width: 26px; height: 26px; }
+
+  h1 {
+    margin: 0 0 10px;
+    font-size: 23px;
+    line-height: 1.25;
+    letter-spacing: -0.2px;
+    font-weight: 700;
+  }
+
+  p { margin: 0 0 14px; font-size: 15px; color: var(--texto-2); }
+  p:last-child { margin-bottom: 0; }
+
+  .destaque { color: var(--texto); font-weight: 600; }
+
+  .rodape {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--borda);
+    font-size: 13px;
+    color: var(--texto-3);
+  }
+
+  .ok    { color: var(--verde); }
+  .aviso { color: var(--ambar); }
+
+  .diagnostico {
+    margin-top: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--texto-3);
+    word-break: break-all;
+  }
+
+  /* Enquanto o script não classificou o desfecho, nada aparece — meio segundo
+     de tela vazia é melhor que meio segundo de mensagem errada. */
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<main class="cartao">
+  <!-- O F da marca, desenhado em SVG para não depender de imagem hospedada. -->
+  <svg class="marca" viewBox="0 0 100 100" role="img" aria-label="Fyn">
+    <rect width="100" height="100" rx="26" fill="#16A34A"/>
+    <g fill="#0F1F16">
+      <rect x="35" y="27" width="11" height="46" rx="5.5"/>
+      <rect x="35" y="27" width="32" height="11" rx="5.5"/>
+      <rect x="35" y="44" width="25" height="11" rx="5.5"/>
+    </g>
+  </svg>
+
+  <!-- 1 ─ Confirmou ─────────────────────────────────────────────────── -->
+  <section id="sucesso" hidden>
+    <div class="selo ok">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 12.5 L9.5 18 L20 6"/>
+      </svg>
+    </div>
+    <h1>Cadastro confirmado</h1>
+    <p>Seu e-mail foi verificado. A conta já está pronta para uso.</p>
+    <p class="destaque">Volte ao Fyn e entre com seu e-mail e senha.</p>
+    <p class="rodape">Pode fechar esta página.</p>
+  </section>
+
+  <!-- 2 ─ Link expirado ou já usado ─────────────────────────────────── -->
+  <section id="falha" hidden>
+    <div class="selo aviso">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+           stroke-linecap="round" aria-hidden="true">
+        <path d="M12 6 V13.5"/><path d="M12 18 V18.01"/>
+      </svg>
+    </div>
+    <h1>Este link não vale mais</h1>
+    <p id="falha-motivo">O link expirou ou já tinha sido usado.</p>
+    <p class="destaque">
+      Abra o Fyn e faça o cadastro de novo com o mesmo e-mail para receber um
+      link novo.
+    </p>
+    <p class="rodape">
+      Se você já tinha confirmado antes, está tudo certo — é só entrar
+      normalmente no app.
+    </p>
+  </section>
+
+  <!-- 4 ─ Não deu para afirmar nada ─────────────────────────────────── -->
+  <!--
+    Fallback deliberadamente otimista. Quem chega aqui ou abriu o endereço
+    direto, e não perde nada com o texto, ou veio do e-mail num formato que não
+    soubemos ler — e nesse caso a confirmação provavelmente funcionou, porque o
+    servidor valida ANTES de redirecionar. Mandar essa pessoa tentar entrar
+    custa um toque; mandá-la refazer o cadastro por precaução custa um e-mail
+    novo e a sensação de que algo quebrou.
+  -->
+  <section id="neutro" hidden>
+    <h1>Fyn</h1>
+    <p>Esta página é o destino do link de confirmação de cadastro.</p>
+    <p class="destaque">
+      Se você chegou por aquele e-mail, pode tentar entrar no app normalmente.
+    </p>
+    <p class="rodape">Para registrar os gastos, use o aplicativo.</p>
+    <!--
+      Só aparece quando algo chegou na URL e não soubemos ler. Existe para um
+      print de celular responder "o que o Supabase mandou?" sem precisar de
+      ninguém com o navegador aberto no computador.
+
+      Valores truncados: para o diagnóstico o que importa são os NOMES das
+      chaves. O conteúdo delas não precisa ir para a tela nem para um print que
+      circula por aí.
+    -->
+    <p class="diagnostico" id="diagnostico" hidden></p>
+  </section>
+</main>
+
+<script>
+(function () {
+  // O Supabase manda o desfecho no fragmento; algumas rotas de erro usam a
+  // query string. Ler os dois evita cair no caso neutro por engano.
+  var frag = new URLSearchParams(location.hash.replace(/^#/, ''));
+  var busca = new URLSearchParams(location.search);
+
+  function valor(chave) { return frag.get(chave) || busca.get(chave); }
+
+  var erro = valor('error') || valor('error_code');
+
+  // `code` é o fluxo PKCE; `access_token` é o implícito. `type` sozinho cobre
+  // variações que mandam só isso. Aceitar os três deixa a página imune a uma
+  // troca de flowType no cliente.
+  var confirmou = valor('code') || valor('access_token') || valor('type');
+
+  var alvo;
+
+  if (erro) {
+    alvo = 'falha';
+
+    // `error_description` vem em inglês. Traduzimos os casos comuns e, para o
+    // resto, ficamos com o texto padrão em vez de mostrar inglês cru.
+    var codigo = (valor('error_code') || '').toLowerCase();
+    if (codigo === 'otp_expired') {
+      document.getElementById('falha-motivo').textContent =
+        'O link de confirmação venceu. Eles valem por tempo limitado.';
+    } else if (codigo === 'access_denied') {
+      document.getElementById('falha-motivo').textContent =
+        'O link já tinha sido usado uma vez.';
+    }
+  } else if (confirmou) {
+    alvo = 'sucesso';
+  } else {
+    alvo = 'neutro';
+  }
+
+  document.getElementById(alvo).hidden = false;
+
+  if (alvo === 'neutro') {
+    var chaves = [];
+    [['?', busca], ['#', frag]].forEach(function (par) {
+      par[1].forEach(function (v, k) {
+        chaves.push(par[0] + k + '=' + (v.length > 10 ? v.slice(0, 10) + '…' : v));
+      });
+    });
+    if (chaves.length) {
+      var caixa = document.getElementById('diagnostico');
+      caixa.textContent = 'recebido: ' + chaves.join('  ');
+      caixa.hidden = false;
+    }
+  }
+
+  // Tira tokens e códigos do endereço visível. `replaceState` troca a entrada
+  // atual do histórico, então o botão "voltar" também não os recupera.
+  if (location.hash || location.search) {
+    history.replaceState(null, '', location.pathname);
+  }
+})();
+</script>
+
+</body>
+</html>
