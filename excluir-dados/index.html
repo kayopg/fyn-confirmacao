@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Fyn — Excluir meus dados</title>
+
+<!--
+  Página de solicitação de exclusão de dados.
+
+  Precisa existir um caminho ACESSÍVEL POR NAVEGADOR, porque quem já
+  desinstalou o app não alcança mais nada de dentro dele.
+
+  ⚠ O conteúdo espelha o que o banco realmente faz hoje
+  (supabase/migrations/0001_schema_inicial.sql):
+
+    - household_members.user_id → auth.users ON DELETE CASCADE
+      apagar a conta remove o perfil da pessoa na família
+
+    - expenses.member_id → household_members ON DELETE SET NULL
+      os lançamentos SOBREVIVEM, apenas deixam de apontar para a pessoa
+
+  Ou seja: a exclusão anonimiza os lançamentos em vez de apagá-los, porque o
+  orçamento é conjunto e aqueles valores compõem o histórico dos outros
+  integrantes. Se essa regra mudar no schema, esta página muda junto —
+  descrever exclusão de forma diferente do que o código executa é o pior tipo
+  de erro que uma página destas pode ter.
+
+  ⚠ ANTES DE PUBLICAR: trocar arimanoelgomes@gmail.com pelo e-mail de contato.
+-->
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  :root {
+    --fundo: #0C1410; --superficie: #151F1A; --borda: #27362D;
+    --texto: #E9F2EC; --texto-2: #9CB0A4; --texto-3: #6E8579;
+    --verde: #22C55E; --ambar: #F59E0B;
+  }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--fundo); color: var(--texto);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    line-height: 1.65; -webkit-font-smoothing: antialiased;
+  }
+  .folha {
+    max-width: 720px; margin: 0 auto;
+    padding: max(28px, env(safe-area-inset-top)) 22px max(48px, env(safe-area-inset-bottom));
+  }
+  header { display: flex; align-items: center; gap: 12px; }
+  header svg { width: 40px; height: 40px; flex: none; border-radius: 11px; }
+  header span { font-size: 19px; font-weight: 700; }
+  h1 { font-size: 25px; line-height: 1.25; margin: 20px 0 10px; }
+  h2 {
+    font-size: 17px; margin: 32px 0 8px; padding-top: 18px;
+    border-top: 1px solid var(--borda);
+  }
+  p, li { color: var(--texto-2); font-size: 15px; }
+  p { margin: 0 0 12px; }
+  ul, ol { margin: 0 0 12px; padding-left: 20px; }
+  li { margin-bottom: 6px; }
+  strong { color: var(--texto); }
+  a { color: var(--verde); }
+  .caixa {
+    background: var(--superficie); border: 1px solid var(--borda);
+    border-radius: 12px; padding: 16px 18px; margin: 16px 0;
+  }
+  .caixa h3 { margin: 0 0 8px; font-size: 15px; }
+  .caixa p:last-child, .caixa ul:last-child { margin-bottom: 0; }
+  .some h3 { color: var(--ambar); }
+  .fica h3 { color: var(--verde); }
+  .passos { counter-reset: p; list-style: none; padding-left: 0; }
+  .passos li {
+    counter-increment: p; position: relative; padding-left: 34px; margin-bottom: 10px;
+  }
+  .passos li::before {
+    content: counter(p); position: absolute; left: 0; top: 1px;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--verde); color: #06210F;
+    font-size: 12px; font-weight: 700; display: grid; place-items: center;
+  }
+  footer {
+    margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--borda);
+    color: var(--texto-3); font-size: 13px;
+  }
+</style>
+</head>
+<body>
+<main class="folha">
+
+<header>
+  <svg viewBox="0 0 100 100" role="img" aria-label="Fyn">
+    <rect width="100" height="100" rx="26" fill="#16A34A"/>
+    <g fill="#0F1F16">
+      <rect x="35" y="27" width="11" height="46" rx="5.5"/>
+      <rect x="35" y="27" width="32" height="11" rx="5.5"/>
+      <rect x="35" y="44" width="25" height="11" rx="5.5"/>
+    </g>
+  </svg>
+  <span>Fyn</span>
+</header>
+
+<h1>Excluir meus dados</h1>
+
+<p>
+  Você pode pedir a exclusão da sua conta do Fyn a qualquer momento, mesmo já
+  tendo desinstalado o aplicativo.
+</p>
+
+<h2>Como solicitar</h2>
+
+<ol class="passos">
+  <li>
+    Envie um e-mail para <strong>arimanoelgomes@gmail.com</strong> com o assunto
+    <strong>Excluir minha conta do Fyn</strong>.
+  </li>
+  <li>
+    No corpo, informe <strong>o mesmo e-mail que você usa para entrar</strong>
+    no aplicativo. É por ele que a conta é localizada.
+  </li>
+  <li>
+    Diga também se deseja apagar os <strong>lançamentos</strong> que você
+    registrou, além da conta. A seção abaixo explica a diferença.
+  </li>
+</ol>
+
+<p>
+  O pedido é atendido em até <strong>7 dias</strong>. Você recebe uma
+  confirmação por e-mail quando a exclusão for concluída.
+</p>
+
+<h2>O que é apagado</h2>
+
+<div class="caixa some">
+  <h3>Some para sempre</h3>
+  <ul>
+    <li>Seu acesso: e-mail e senha de login.</li>
+    <li>Seu perfil dentro da família: nome de exibição e cor.</li>
+    <li>Sua associação ao grupo familiar.</li>
+  </ul>
+</div>
+
+<div class="caixa fica">
+  <h3>Permanece, por padrão</h3>
+  <ul>
+    <li>
+      Os <strong>lançamentos que você registrou</strong>, sem qualquer vínculo
+      com você. Eles deixam de apontar para uma pessoa e passam a constar como
+      gasto da família.
+    </li>
+    <li>
+      Períodos, metas, categorias e compromissos cadastrados, que são
+      compartilhados por todo o grupo.
+    </li>
+  </ul>
+</div>
+
+<p>
+  A razão é que o Fyn é um <strong>orçamento conjunto</strong>: aqueles valores
+  compõem o histórico financeiro dos outros integrantes da família. Apagá-los
+  junto com a conta alteraria totais e relatórios de terceiros, sem que eles
+  tenham pedido nada.
+</p>
+
+<p>
+  Se você quiser que os seus lançamentos também sejam apagados, basta dizer no
+  e-mail — o pedido é atendido. Vale saber que, nesse caso, os totais dos
+  períodos em que você lançou vão diminuir para os demais integrantes.
+</p>
+
+<h2>Apagar lançamentos você mesmo</h2>
+
+<p>
+  Enquanto ainda tiver acesso ao aplicativo, qualquer lançamento pode ser
+  excluído direto por lá: aba <strong>Resumo</strong>, toque na categoria para
+  abrir os lançamentos, escolha o lançamento e use <strong>Excluir</strong>.
+</p>
+
+<p>
+  Fazer isso antes de pedir a exclusão da conta é o caminho mais rápido, e deixa
+  você no controle de exatamente o que sai.
+</p>
+
+<h2>Se você é quem criou a família</h2>
+
+<p>
+  A exclusão da sua conta <strong>não apaga a família</strong> nem remove o
+  acesso das outras pessoas. Elas continuam usando o orçamento normalmente.
+</p>
+
+<p>
+  Para encerrar a família inteira, com todos os dados de todos os integrantes,
+  escreva isso explicitamente no e-mail. Nesse caso pedimos a confirmação dos
+  demais integrantes antes de executar.
+</p>
+
+<h2>Contato</h2>
+
+<p>
+  <strong>CONTATO_AQUI</strong> — dúvidas sobre exclusão ou sobre a
+  <a href="../politica-privacidade/">Política de Privacidade</a>.
+</p>
+
+<footer>
+  Fyn — aplicativo de uso familiar, sem fins comerciais.
+</footer>
+
+</main>
+</body>
+</html>
