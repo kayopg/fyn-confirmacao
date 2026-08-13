@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Fyn — Política de Privacidade</title>
+
+<!--
+  ⚠ ANTES DE PUBLICAR: trocar arimanoelgomes@gmail.com pelo e-mail de contato.
+
+  O conteúdo descreve o que o app realmente guarda, tabela por tabela
+  (supabase/migrations). Se o schema mudar, esta página muda junto.
+-->
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  :root {
+    --fundo: #0C1410; --superficie: #151F1A; --borda: #27362D;
+    --texto: #E9F2EC; --texto-2: #9CB0A4; --texto-3: #6E8579;
+    --verde: #22C55E;
+  }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--fundo); color: var(--texto);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    line-height: 1.65; -webkit-font-smoothing: antialiased;
+  }
+  .folha {
+    max-width: 720px; margin: 0 auto;
+    padding: max(28px, env(safe-area-inset-top)) 22px max(48px, env(safe-area-inset-bottom));
+  }
+  header { display: flex; align-items: center; gap: 12px; }
+  header svg { width: 40px; height: 40px; flex: none; border-radius: 11px; }
+  header span { font-size: 19px; font-weight: 700; }
+  h1 { font-size: 25px; line-height: 1.25; margin: 20px 0 6px; }
+  .data { color: var(--texto-3); font-size: 13px; margin: 0 0 8px; }
+  h2 {
+    font-size: 17px; margin: 32px 0 8px; padding-top: 18px;
+    border-top: 1px solid var(--borda);
+  }
+  p, li { color: var(--texto-2); font-size: 15px; }
+  p { margin: 0 0 12px; }
+  ul { margin: 0 0 12px; padding-left: 20px; }
+  li { margin-bottom: 6px; }
+  strong { color: var(--texto); }
+  a { color: var(--verde); }
+  .caixa {
+    background: var(--superficie); border: 1px solid var(--borda);
+    border-radius: 12px; padding: 16px 18px; margin: 16px 0;
+  }
+  .caixa p:last-child, .caixa ul:last-child { margin-bottom: 0; }
+  footer {
+    margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--borda);
+    color: var(--texto-3); font-size: 13px;
+  }
+</style>
+</head>
+<body>
+<main class="folha">
+
+<header>
+  <svg viewBox="0 0 100 100" role="img" aria-label="Fyn">
+    <rect width="100" height="100" rx="26" fill="#16A34A"/>
+    <g fill="#0F1F16">
+      <rect x="35" y="27" width="11" height="46" rx="5.5"/>
+      <rect x="35" y="27" width="32" height="11" rx="5.5"/>
+      <rect x="35" y="44" width="25" height="11" rx="5.5"/>
+    </g>
+  </svg>
+  <span>Fyn</span>
+</header>
+
+<h1>Política de Privacidade</h1>
+<p class="data">Última atualização: agosto de 2026</p>
+
+<p>
+  O Fyn é um aplicativo de controle de gastos de uso familiar. Esta página
+  descreve exatamente o que ele guarda, quem enxerga esses dados e como
+  removê-los.
+</p>
+
+<div class="caixa">
+  <p>
+    <strong>O resumo em uma frase:</strong> o Fyn guarda apenas o que você
+    digita nele, compartilha isso somente com as pessoas da sua própria
+    família dentro do app, e não vende, não anuncia e não rastreia nada.
+  </p>
+</div>
+
+<h2>O que é coletado</h2>
+
+<p>Tudo abaixo é informado por você. O app não coleta nada em segundo plano.</p>
+
+<ul>
+  <li><strong>Conta:</strong> e-mail e senha. A senha é guardada apenas como
+    hash pelo serviço de autenticação — nem nós conseguimos lê-la.</li>
+  <li><strong>Perfil na família:</strong> o nome de exibição e a cor que você
+    escolhe.</li>
+  <li><strong>Família:</strong> o nome do grupo e o código de convite.</li>
+  <li><strong>Períodos:</strong> competência, datas de início e fim, e a meta
+    de gasto.</li>
+  <li><strong>Lançamentos:</strong> valor, categoria, data, descrição
+    opcional, de quem é o gasto e quem o registrou.</li>
+  <li><strong>Compromissos:</strong> parcelamentos, custos fixos e contas a
+    receber, incluindo o nome que você escrever para identificar terceiros.</li>
+</ul>
+
+<p>
+  O app <strong>não</strong> acessa contatos, localização, câmera, microfone,
+  agenda, fotos nem qualquer conta bancária. Não há integração com banco: todo
+  valor é digitado à mão.
+</p>
+
+<h2>O que não existe aqui</h2>
+
+<ul>
+  <li>Nenhuma ferramenta de análise de uso ou rastreamento de comportamento.</li>
+  <li>Nenhum anúncio, e nenhum identificador de publicidade.</li>
+  <li>Nenhuma venda ou compartilhamento de dados com terceiros para fins
+    comerciais.</li>
+  <li>Nenhum perfil de crédito, pontuação ou avaliação financeira.</li>
+</ul>
+
+<h2>Quem enxerga seus dados</h2>
+
+<p>
+  O Fyn foi feito para orçamento conjunto. Todas as pessoas que entram na
+  <strong>mesma família</strong> — usando o código de convite — enxergam os
+  mesmos lançamentos, metas e compromissos, inclusive os que você registrou.
+  Isso é a finalidade do app, não um efeito colateral.
+</p>
+
+<p>
+  Entre famílias diferentes não há qualquer visibilidade. A separação é
+  imposta pelo banco de dados, por políticas de acesso avaliadas a cada
+  consulta, e não apenas pela interface do aplicativo.
+</p>
+
+<div class="caixa">
+  <p>
+    <strong>O código de convite é a chave da sua família.</strong> Quem o
+    tiver entra e passa a ver tudo. Compartilhe apenas com quem deve ter esse
+    acesso.
+  </p>
+</div>
+
+<h2>Onde os dados ficam</h2>
+
+<p>
+  Os dados são armazenados no <strong>Supabase</strong>, serviço de banco de
+  dados e autenticação que hospeda a infraestrutura do app. O tráfego entre o
+  aplicativo e o servidor é criptografado.
+</p>
+
+<p>
+  O aparelho guarda somente o token da sua sessão, para não pedir login toda
+  vez. Os lançamentos não ficam salvos no celular — por isso o app precisa de
+  internet para funcionar.
+</p>
+
+<h2>Por quanto tempo</h2>
+
+<p>
+  Enquanto a conta existir. Não há expurgo automático: um lançamento de dois
+  anos atrás continua no histórico da família até alguém apagá-lo.
+</p>
+
+<h2>Seus direitos</h2>
+
+<p>
+  Você pode, a qualquer momento, acessar e corrigir seus dados dentro do
+  próprio aplicativo, e solicitar a exclusão da conta.
+</p>
+
+<p>
+  A página <a href="../excluir-dados/">Excluir meus dados</a> explica o
+  procedimento e detalha o que é apagado e o que permanece.
+</p>
+
+<h2>Menores de idade</h2>
+
+<p>
+  O app pode ser usado por filhos dentro do grupo familiar, sob supervisão de
+  um responsável, que é quem cria a família e distribui o código de convite.
+  Não há coleta dirigida a crianças nem qualquer publicidade.
+</p>
+
+<h2>Alterações nesta política</h2>
+
+<p>
+  Se algo mudar de forma relevante, a data no topo desta página é atualizada.
+  Como o app é de uso familiar e fechado, mudanças são comunicadas
+  diretamente aos integrantes.
+</p>
+
+<h2>Contato</h2>
+
+<p>
+  Dúvidas sobre privacidade ou pedidos relacionados aos seus dados:
+  <strong>arimanoelgomes@gmail.com</strong>.
+</p>
+
+<footer>
+  Fyn — aplicativo de uso familiar, sem fins comerciais.
+</footer>
+
+</main>
+</body>
+</html>
